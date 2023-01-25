@@ -11,3 +11,6 @@ elif y < 30:
     print("lesser")
 else: 
     print('equal')
+
+print(1==1) # True, compares value and type
+print(1 is 1.0) # False, more stronger than ==
