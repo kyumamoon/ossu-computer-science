@@ -45,26 +45,38 @@ def giveHint(letterDict):
     
     #for i in wordlist:
         regexString = '^'
-        for ii in range(len(letterDict)):
+        for ii in range(len(wordInProgress)):
             if ii == 0:
-                #regexString = regexString+letterDict[0][1]
-                regexString = regexString+'.'
+                if letterDict[ii][2] == 0:
+                    #
+                    regexString = regexString+'.'
+                else:
+                    #regexString = regexString+letterDict[0][1]
+                    regexString = regexString+wordInProgress[ii]
             else:
                 if letterDict[ii][2] == 0:
                     regexString = regexString+'.'
                 else:
-                    regexString = regexString+letterDict[ii][1]
+                    #regexString = regexString+letterDict[ii][1]
+                    regexString = regexString+wordInProgress[ii]
 
-    # print(regexString)
-    print("")
-    print("HINT: POSSIBLE MATCHES:")
+    print(regexString)
     #regexString = '^t..t'
+
+    matches = list()
     for word in wordlist:
-        if len(word) == 4:
+        if len(word) == len(wordInProgress):
             x = re.findall(regexString,word)
             if len(x) == 1:
-                print(x)
+                matches.append(x)
+                #print(x)
     #print(re.findall(str(regexString),' '.join(wordlist)))
+    print("")
+    print("HINT:",len(matches),"POSSIBLE MATCHES:")
+
+    if len(matches) > 0:
+        for i in matches:
+            print(i,end=" ")
 
 def guessing(guess,letterDict):
     """
@@ -148,7 +160,7 @@ def hangman(x,letterDict):
 if __name__ == "__main__": 
     letterDict = list()
     #secret_word = choose_word(wordlist)
-    secret_word = 'tact'
+    secret_word = 'maxims'
     for i in range(len(secret_word)):
         letterDict.append([i,secret_word[i],0])
     #print(letterDict[0])
