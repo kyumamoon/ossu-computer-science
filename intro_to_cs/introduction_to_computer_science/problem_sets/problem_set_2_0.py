@@ -22,44 +22,40 @@ def load_words():
     return wordlist
 
 wordlist = load_words()
-#print(wordlist)
-#print(' '.join(wordlist))
 
 def choose_word(wordlist):
     """
-    wordlist (list): list of words (strings)
-    
+    Input: wordlist (list): list of words (strings)
     Returns a word from wordlist at random
     """
     return random.choice(wordlist)
 
-def giveHint(letterDict):
+def giveHint(chosenWordValues):
+    """
+    Input: list of checking values of chosen word
+    Functionality: find all matching words from word list that has same length and guesses characters of same index positions. Uses regex.
+    """
+
     wordInProgress = ""
-    for i in range(len(letterDict)):
-        if letterDict[i][2] == 1:
-            wordInProgress = wordInProgress+letterDict[i][1]
+    for i in range(len(chosenWordValues)):
+        if chosenWordValues[i][2] == 1:
+            wordInProgress = wordInProgress+chosenWordValues[i][1]
         else:
             wordInProgress = wordInProgress+"_"
     
-    #for i in wordlist:
-        regexString = '^'
-        for ii in range(len(wordInProgress)):
-            if ii == 0:
-                if letterDict[ii][2] == 0:
-                    #
-                    regexString = regexString+'.'
-                else:
-                    #regexString = regexString+letterDict[0][1]
-                    regexString = regexString+wordInProgress[ii]
-            else:
-                if letterDict[ii][2] == 0:
-                    regexString = regexString+'.'
-                else:
-                    #regexString = regexString+letterDict[ii][1]
-                    regexString = regexString+wordInProgress[ii]
 
-    print(regexString)
-    #regexString = '^t..t'
+    regexString = '^'
+    for i in range(len(wordInProgress)):
+        if i == 0:
+            if chosenWordValues[i][2] == 0:
+                regexString = regexString+'.'
+            else:
+                 regexString = regexString+wordInProgress[i]
+        else:
+            if chosenWordValues[i][2] == 0:
+                regexString = regexString+'.'
+            else:
+                regexString = regexString+wordInProgress[i]
 
     matches = list()
     for word in wordlist:
@@ -67,35 +63,57 @@ def giveHint(letterDict):
             x = re.findall(regexString,word)
             if len(x) == 1:
                 matches.append(x)
-                #print(x)
-    #print(re.findall(str(regexString),' '.join(wordlist)))
+
     print("")
     print("HINT:",len(matches),"POSSIBLE MATCHES:")
 
     if len(matches) > 0:
         for i in matches:
             print(i,end=" ")
+        print('')
 
-def guessing(guess,letterDict,warnings,availableLetters,guesses):
+def printPlaceholder(chosenWordValues,solvedCount):
     """
-    Input: guess is a character of the guess, wordDict is a dict of the word
-    Returns: bool if all letters solved.
+    Input: choseWordValues is a list of checking values for chosen word
+    Input: solved count is int
+    Returns: a string and int
+    Functionality: function goes through list and see which characters are guessed or not and count guessed, it also creates a placeholder for unguessed characters in the word.
+
     """
-    #newWordDict = wordDict.copy()
+    placeholder = ""
+
+    for i in range(len(chosenWordValues)):
+        if chosenWordValues[i][2] == 1:
+            placeholder = placeholder+chosenWordValues[i][1]
+            solvedCount+=1
+        else:
+            placeholder = placeholder+"_"
+    
+    return placeholder,solvedCount
+
+def guessing(guess,chosenWordValues,warnings,availableLetters,guesses):
+    """
+    Input: guess is a character of the guess
+    Input: chosenWordValues is a list with checking values
+    Input: warnings is an int
+    Input: availableLetters is a list
+    Input: guesses is a int
+    Returns: bool, list, int, int
+    Functionality: main game logic
+    """
     isFound = False
-    solvedCount = 0
     isUsed = True
     isSolved = False
+    solvedCount = 0
 
     if str.isalpha(guess):
 
             guessLower = guess.lower()
 
-            for i in range(len(letterDict)):
-                if (guessLower == letterDict[i][1]) and (letterDict[i][2] == 0):
-                    letterDict[i][2] = 1
+            for i in range(len(chosenWordValues)):
+                if (guessLower == chosenWordValues[i][1]) and (chosenWordValues[i][2] == 0):
+                    chosenWordValues[i][2] = 1
                     isFound = True
-                    #print(letterDict)
             
             for i in range(len(availableLetters)):
                 if availableLetters[i] == guess:
@@ -104,16 +122,11 @@ def guessing(guess,letterDict,warnings,availableLetters,guesses):
                     break
 
     elif guess == "*":
-        giveHint(letterDict)
-        return isSolved,isFound,availableLetters,guesses,warnings
+        giveHint(chosenWordValues)
+        return isSolved,availableLetters,guesses,warnings
                     
-    newPlaceHolder = ""
-    for i in range(len(letterDict)):
-        if letterDict[i][2] == 1:
-            newPlaceHolder = newPlaceHolder+letterDict[i][1]
-            solvedCount+=1
-        else:
-            newPlaceHolder = newPlaceHolder+"_"
+    newPlaceHolder,count = printPlaceholder(chosenWordValues,solvedCount)
+    solvedCount = count
 
     if isFound:
         print("Nice! Your guess was in the word!")
@@ -144,60 +157,45 @@ def guessing(guess,letterDict,warnings,availableLetters,guesses):
         print("Try again!")
         print("WORD:",newPlaceHolder)
 
-    if solvedCount == len(letterDict):
+    if solvedCount == len(chosenWordValues):
         isSolved = True
 
-    return isSolved,isFound,availableLetters,guesses,warnings
+    return isSolved,availableLetters,guesses,warnings
 
-    #return newWordDict
+def getUniqueLetters(chosenWordValues):
+    """
+    Input: chosenWordValues, a dictionary with each character of chosen word as the values
+    Return: count of unique characters in the word.
+    """
 
-def checkAvailableLetters(string,guess):
-    giveWarning = False
-
-    if str.isalpha(guess):
-        temp = guess.lower()
-        for i in range(len(string)):
-            if string[i] == guess:
-                string[i] = "_"
-                break
-        print("You guessed that already! (+1 Warning)")
-        giveWarning = True
-
-        return string,giveWarning
-    else:
-        return string,giveWarning
-
-
-def getUniqueLetters(letterDict):
     uniques = dict()
     count = 0
 
-    for i in range(len(letterDict)):
-        if letterDict[i][1] not in uniques:
-            uniques[letterDict[i][1]] = 1
-
-    for i in range(len(uniques)):
-        count+=1
+    for i in range(len(chosenWordValues)):
+        if chosenWordValues[i][1] not in uniques:
+            uniques[chosenWordValues[i][1]] = 1
+            count+=1
 
     return count
 
-def hangman(x,letterDict):
+def hangman(x,chosenWordValues):
     """
-    Input: a string
+    Input: x, a string which is the randomly chosen word
+    Input: chosenWordValues, a list to track each letter of the word that is chosen
     Functionality: plays hangman
     """
-    #guessesAvailable = len(letterDict)+3
-    guessesAvailable = 6
-    isSolved = False
+
     lettersAvailable = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    isSolved = False
+    guessesAvailable = 6
     warnings = 0
     uniqueLetters = 0
     score = 0
-    # Set up placeholders
 
     print("Welcome to Hangman The Game:")
-    print("Your mystery word is",len(letterDict),"letters long:")
+    print("Your mystery word is",len(chosenWordValues),"letters long:")
     print("WORD:",end="")
+
     for i in range(len(x)):
         if i==len(x)-1:
             print("_")
@@ -215,23 +213,17 @@ def hangman(x,letterDict):
         print("Unused letters:",unusedL)
 
         guess = input("Enter a letter guess: ")
-
-        checkSolved,isFound,availableLetters,guesses,warns = guessing(str.lower(guess),letterDict,warnings,lettersAvailable,guessesAvailable)
+        checkSolved,availableLetters,guesses,warns = guessing(str.lower(guess),chosenWordValues,warnings,lettersAvailable,guessesAvailable)
 
         lettersAvailable = availableLetters
         guessesAvailable = guesses
         warnings = warns
 
-        #lettersAvailable,giveWarning = checkAvailableLetters(lettersAvailable,guess)
-
         if checkSolved:
             isSolved = True
-            uniqueLetters = getUniqueLetters(letterDict)
+            uniqueLetters = getUniqueLetters(chosenWordValues)
             score = guessesAvailable*uniqueLetters
             break
-        
-        #if not isFound:
-        #    guessesAvailable-=1
 
     if isSolved:
         print("YOU WIN WITH A SCORE OF",score,"AND",guessesAvailable,"GUESSES LEFTOVER!")
@@ -239,16 +231,15 @@ def hangman(x,letterDict):
         print("YOU RAN OUT OF GUESSES.")
         print("THE WORD WAS:",x,".")
 
-if __name__ == "__main__": 
-    letterDict = list()
-    #secret_word = choose_word(wordlist)
-    secret_word = 'maxims'
+if __name__ == "__main__":
+    """
+    Setup the startup variables.
+    Bot picks random word from list.
+    """
+    chosenWordList = list()
+    secret_word = choose_word(wordlist)
     for i in range(len(secret_word)):
-        letterDict.append([i,secret_word[i],0])
-    #print(letterDict[0])
-    #print(letterDict[0][0])
-    #print(letterDict[0][1])
-    #print(letterDict[0][2])
-    print(secret_word)
-    hangman(secret_word,letterDict)
+        chosenWordList.append([i,secret_word[i],0])
+    hangman(secret_word,chosenWordList)
+    
     
