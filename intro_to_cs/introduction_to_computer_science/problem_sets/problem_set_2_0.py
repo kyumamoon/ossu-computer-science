@@ -118,6 +118,15 @@ def guessing(guess,letterDict):
         return False,isFound
     #return newWordDict
 
+def checkAvailableLetters(string,guess):
+    if str.isalpha(guess):
+        temp = guess.lower()
+        for i in range(len(string)):
+            if string[i] == guess:
+                string[i] = "_"
+                break
+        return string
+
 def hangman(x,letterDict):
     """
     Input: a string
@@ -125,10 +134,11 @@ def hangman(x,letterDict):
     """
     guessesAvailable = len(letterDict)+3
     isSolved = False
+    lettersAvailable = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
 
     # Set up placeholders
 
-    print("Playing Hangman")
+    print("Welcome to Hangman The Game:")
     print("Your mystery word is",len(letterDict),"letters long:")
 
     for i in range(len(x)):
@@ -139,11 +149,17 @@ def hangman(x,letterDict):
             print("_",end='')
         
     print("YOU CAN USE A HINT AT ANYTIME BY ENTERING * AS A GUESS.")
+
     while guessesAvailable != 0:
         print("")
-        print("GUESSES REMAINING:",guessesAvailable)
-        guess = input("Enter you letter guess: ")
+        print("Guesses Remaining:",guessesAvailable)
+        unusedL = ''
+        for i in lettersAvailable:
+            unusedL += i
+        print("Unused letters:",unusedL)
+        guess = input("Enter a letter guess: ")
         check,found = guessing(str.lower(guess),letterDict)
+        lettersAvailable = checkAvailableLetters(lettersAvailable,guess)
         if check:
             isSolved = True
             break
