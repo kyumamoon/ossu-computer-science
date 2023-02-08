@@ -444,8 +444,32 @@ def substitute_hand(hand, letter):
     letter: string
     returns: dictionary (string -> int)
     """
+    handCopy = hand.copy()
+
+    if not hand.get(letter):
+        return handCopy
+    else:
+        abcDict = {}
+        abc = 'abcdefghijklmnopqrstuvwxyz*'
+        trimmedabc = ''
+
+        for i in range(len(abc)):
+            abcDict[abc[i]] = 1
+        
+        for key in hand:
+            del abcDict[key]
+        
+        for key in abcDict:
+            trimmedabc+=key
+
+        del handCopy[letter]
+
+        x = random.choice(trimmedabc)
+        handCopy[x] = 1
     
-    pass  # TO DO... Remove this line when you implement this function
+        return handCopy
+
+    #pass  # TO DO... Remove this line when you implement this function
        
     
 def play_game(word_list):
@@ -478,8 +502,42 @@ def play_game(word_list):
 
     word_list: list of lowercase strings
     """
-    
-    print("play_game not implemented.") # TO DO... Remove this line when you implement this function
+    total_hands = 0
+    totalGameScore = 0
+    replayUsed = False
+
+    try:
+        total_hands = int(input("Enter total number of hands:"))
+    except:
+        print("PLEASE USE A NUMBER.")
+        play_game(word_list)
+   
+    for i in range(total_hands):
+        handScore = 0
+
+        current_hand = deal_hand(HAND_SIZE)
+        print("Current Hand:",end=" ")
+        display_hand(current_hand)
+
+        if replayUsed == False:
+            user_input = input("Would you like to substitute a letter?")
+            if user_input.lower() == "yes":
+                replace_choice = input("Which letter would you like to replace:")
+                current_hand = substitute_hand(current_hand,replace_choice)
+
+        handScore = play_hand(current_hand,word_list)
+
+        if replayUsed == False:
+            replay_input = input("Would you like to replay the hand?")
+            if replay_input.lower() == "yes":
+                handScore = play_hand(current_hand,word_list)
+                replayUsed = True
+
+        totalGameScore+=handScore
+        print("")
+
+    print("Total score over all hands:",totalGameScore)
+    #print("play_game not implemented.") # TO DO... Remove this line when you implement this function
     
 
 
@@ -491,5 +549,7 @@ def play_game(word_list):
 if __name__ == '__main__':
     word_list = load_words()
     #play_game(word_list)
-    testHand = {'a':1,'c':1,'f':1,'i':1,'*':1,'t':1,'x':1}
-    play_hand(testHand,word_list)
+    #testHand = {'a':1,'c':1,'f':1,'i':1,'*':1,'t':1,'x':1}
+    #play_hand(testHand,word_list)
+
+    play_game(word_list)
