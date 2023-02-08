@@ -16,7 +16,7 @@ CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
 
 SCRABBLE_LETTER_VALUES = {
-    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
+    'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10,'*':0
 }
 
 # -----------------------------------
@@ -153,10 +153,16 @@ def deal_hand(n):
     hand={}
     num_vowels = int(math.ceil(n / 3))
 
+    temp = ''
+
     for i in range(num_vowels):
         x = random.choice(VOWELS)
         hand[x] = hand.get(x, 0) + 1
-    
+        temp = x
+
+    del hand[temp]
+    hand['*'] = 1
+
     for i in range(num_vowels, n):    
         x = random.choice(CONSONANTS)
         hand[x] = hand.get(x, 0) + 1
@@ -204,6 +210,12 @@ def update_hand(hand, word):
 #
 # Problem #3: Test word validity
 #
+
+def find_WildCardIndex(word):
+    for i in range(len(word)):
+        if word[i] == '*':
+            return i
+
 def is_valid_word(word, hand, word_list):
     """
     Returns True if word is in the word_list and is entirely
@@ -215,24 +227,80 @@ def is_valid_word(word, hand, word_list):
     word_list: list of lowercase strings
     returns: boolean
     """
-    word = word.lower()
-    if not word in word_list:
-        return False
-    else:
-        temp_hand = hand.copy()
+    hasWildCard = False
 
-        isInHand = True
+    for i in range(len(word)):
+        if word[i]=='*':
+            hasWildCard = True
+            break
 
-        for e in word:
-                if temp_hand.get(e):
-                    if temp_hand[e] > 0:
-                        temp_hand[e] -=1
+    if hasWildCard == False:
+        word = word.lower()
+        if not word in word_list:
+            return False
+        else:
+            temp_hand = hand.copy()
+
+            isInHand = True
+
+            for e in word:
+                    if temp_hand.get(e):
+                        if temp_hand[e] > 0:
+                            temp_hand[e] -=1
+                        else:
+                            isInHand = False
                     else:
                         isInHand = False
-                else:
-                    isInHand = False
+            
+            return isInHand
+    else:
+        VOWELS = 'aeiou' # wildcard can only replace
+
+        wildcard_Index = find_WildCardIndex(word)
+        #print("DEBUG_INDEX",wildcard_Index)
+        possibleMatches = []
+        #print("DEBUG_WORD",word)
+        #print(word[0:wildcard_Index])
+
+        for i in range(5):
+            if wildcard_Index == 0:
+                newWord = (VOWELS[i]+word[1:]).lower()
+                possibleMatches.append(newWord)
+            elif wildcard_Index == len(word)-1:
+                newWord = (word[:len(word)-1]+VOWELS[i]).lower()
+                possibleMatches.append()
+            else:
+                newWord = (word[0:wildcard_Index]+VOWELS[i]+word[wildcard_Index+1:]).lower()
+                possibleMatches.append(newWord)
+
+        #print("DEBUG_MATCHES:",possibleMatches)
+
+        matchedWord = ''
+
+        for i in possibleMatches:
+            if i in word_list:
+                matchedWord = i
+                break
         
-        return isInHand
+        if matchedWord == '':
+            return False
+        else:
+            temp_hand = hand.copy()
+            #print(temp_hand)
+            isInHand = True
+
+            for e in word:
+                    if temp_hand.get(e):
+                        if temp_hand[e] > 0:
+                            temp_hand[e] -=1
+                        else:
+                            isInHand = False
+                            break
+                    else:
+                        isInHand = False
+                        break
+            
+            return isInHand
 
     #pass  # TO DO... Remove this line when you implement this function
 
