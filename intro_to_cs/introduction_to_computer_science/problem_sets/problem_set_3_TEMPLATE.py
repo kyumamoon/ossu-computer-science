@@ -268,7 +268,7 @@ def is_valid_word(word, hand, word_list):
                 possibleMatches.append(newWord)
             elif wildcard_Index == len(word)-1:
                 newWord = (word[:len(word)-1]+VOWELS[i]).lower()
-                possibleMatches.append()
+                possibleMatches.append(newWord)
             else:
                 newWord = (word[0:wildcard_Index]+VOWELS[i]+word[wildcard_Index+1:]).lower()
                 possibleMatches.append(newWord)
@@ -314,8 +314,12 @@ def calculate_handlen(hand):
     hand: dictionary (string-> int)
     returns: integer
     """
+    count = 0
+    for key in hand:
+        count+=1
+    return count
     
-    pass  # TO DO... Remove this line when you implement this function
+    # pass  # TO DO... Remove this line when you implement this function
 
 def play_hand(hand, word_list):
 
@@ -348,6 +352,33 @@ def play_hand(hand, word_list):
       
     """
     
+    letters_Left = calculate_handlen(hand)
+    handCopy = hand.copy()
+    score = 0
+
+    while letters_Left > 0:
+
+        display_hand(handCopy) # print hand
+        userInput = input("Enter word, or \"!!\" to indicate that you are finished: ")
+
+        if userInput == "!!":
+            print("Total Score:",score,"points.")
+            break
+        else:
+            if is_valid_word(userInput,handCopy,word_list):
+                score+=get_word_score(userInput,calculate_handlen(handCopy))
+                print(userInput,", earned",get_word_score(userInput,calculate_handlen(handCopy)),"points. Total:",score)
+            else:
+                print("That is not a valid word. Please choose another word.")
+            handCopy = update_hand(handCopy,userInput)
+            letters_Left = calculate_handlen(handCopy)
+
+    if letters_Left > 0:
+        print("Game over. Total score =",score)
+    else:
+        print("Ran out of letters... game over. Total score =",score) 
+
+    return score
     # BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
     # Keep track of the total score
     
@@ -459,4 +490,6 @@ def play_game(word_list):
 #
 if __name__ == '__main__':
     word_list = load_words()
-    play_game(word_list)
+    #play_game(word_list)
+    testHand = {'a':1,'c':1,'f':1,'i':1,'*':1,'t':1,'x':1}
+    play_hand(testHand,word_list)
