@@ -551,5 +551,4 @@ if __name__ == '__main__':
     #play_game(word_list)
     #testHand = {'a':1,'c':1,'f':1,'i':1,'*':1,'t':1,'x':1}
     #play_hand(testHand,word_list)
-
     play_game(word_list)
