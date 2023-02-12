@@ -263,6 +263,7 @@ class CiphertextMessage(Message):
         '''
 
         self.message_text = text
+        self.message_textCleaned = cleanMessage(self.message_text)
         self.valid_words = load_words(WORDLIST_FILENAME)
         # pass #delete this line and replace with your code here
 
@@ -283,7 +284,7 @@ class CiphertextMessage(Message):
         and the decrypted message text using that shift value
         '''
 
-        messageSplit = self.message_text.split()
+        messageSplit = self.message_textCleaned.split()
         shiftScoreList = []
 
         for i in range(26):
@@ -356,6 +357,6 @@ if __name__ == '__main__':
     print('Expected Output:', (24,'hello'))
     print('Actual Output:', ciphertext.decrypt_message())
 
-    cipherStory = CiphertextMessage(cleanMessage(get_story_string()))
+    cipherStory = CiphertextMessage(get_story_string())
     print(cipherStory.decrypt_message())
     
