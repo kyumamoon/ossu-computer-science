@@ -211,12 +211,6 @@ def update_hand(hand, word):
 # Problem #3: Test word validity
 #
 
-def find_WildCardIndex(word):
-    for i in range(len(word)):
-        if word[i] == '*':
-            return i
-    pass
-
 def is_valid_word(word, hand, word_list):
     """
     Returns True if word is in the word_list and is entirely
@@ -257,28 +251,11 @@ def is_valid_word(word, hand, word_list):
     else:
         VOWELS = 'aeiou' # wildcard can only replace
 
-        ##wildcard_Index = find_WildCardIndex(word)
-        #print("DEBUG_INDEX",wildcard_Index)
         possibleMatches = []
-        #print("DEBUG_WORD",word)
-        #print(word[0:wildcard_Index])
-
-        ##for i in range(5):
-        ##    if wildcard_Index == 0:
-        ##        newWord = (VOWELS[i]+word[1:]).lower()
-        ##        possibleMatches.append(newWord)
-        ##    elif wildcard_Index == len(word)-1:
-        ##        newWord = (word[:len(word)-1]+VOWELS[i]).lower()
-        ##        possibleMatches.append(newWord)
-        ##    else:
-        ##        newWord = (word[0:wildcard_Index]+VOWELS[i]+word[wildcard_Index+1:]).lower()
-        ##        possibleMatches.append(newWord)
 
         for i in range(len(VOWELS)):
             newWord = word.replace("*",VOWELS[i])
             possibleMatches.append(newWord)
-
-        #print("DEBUG_MATCHES:",possibleMatches)
 
         matchedWord = ''
 
@@ -291,7 +268,6 @@ def is_valid_word(word, hand, word_list):
             return False
         else:
             temp_hand = hand.copy()
-            #print(temp_hand)
             isInHand = True
 
             for e in word:
@@ -553,7 +529,4 @@ def play_game(word_list):
 #
 if __name__ == '__main__':
     word_list = load_words()
-    #play_game(word_list)
-    #testHand = {'a':1,'c':1,'f':1,'i':1,'*':1,'t':1,'x':1}
-    #play_hand(testHand,word_list)
     play_game(word_list)
