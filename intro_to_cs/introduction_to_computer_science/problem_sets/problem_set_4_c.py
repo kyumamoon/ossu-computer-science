@@ -243,12 +243,6 @@ class EncryptedSubMessage(SubMessage):
         for i in range(len(permutations)):
             best_Permutation.append([0,permutations[i]])
 
-        #count = 0
-        #for i in range(len(permutations)):
-            # print(permutations)
-        #    count+=1
-        #print(count)
-
         for word in splitMessage:
             for i in range(len(best_Permutation)):
                 decryptDict = SubMessage.build_transpose_dict_Reverse(self,"".join(best_Permutation[i][1]))
@@ -258,12 +252,7 @@ class EncryptedSubMessage(SubMessage):
                     best_Permutation[i][0] += 1
 
         # pass #delete this line and replace with your code here
-    
         best_Permutation.sort(reverse=True)
-        print(best_Permutation[0])
-        #decryptDict = SubMessage.build_transpose_dict_Reverse(self,"".join(best_Permutation[0][1]))
-        #decryptWord = SubMessage.apply_transpose(self,decryptDict)
-
         return SubMessage.apply_transpose(self,SubMessage.build_transpose_dict_Reverse(self,"".join(best_Permutation[0][1])))
 
 if __name__ == '__main__':
