@@ -104,15 +104,59 @@ class PhraseTrigger(Trigger):
         self.phrase = phrase.lower()
     def is_phrase_in(self,text):
         # Return True if self.phrase is in text, else false. Not case sensitive
-        phrase_word_list = self.phrase.split()
 
-        lower_Text = text.lower()
+        phrase_word_list = self.phrase.split(" ")
+        phraseJoin = "".join(phrase_word_list)
+        
+        #print("DEBUG 1",phrase_word_list)
 
-        for word in phrase_word_list:
-            if word not in lower_Text:
-                return False
+        symbols = "!@#$%^&*()-_+={}[]|\:;'<>?,./\""
+        cleaned_Text = text.lower()
+        for symbol in symbols:
+            cleaned_Text = cleaned_Text.replace(symbol," ")
 
-        return True
+        cleanedText_wordlist = cleaned_Text.split(" ")
+        #print("DEBUG 2",cleaned_Text)
+        text_wordlist = list()
+        #print("DEBUG 3A",cleanedText_wordlist)
+
+        for string in cleanedText_wordlist:
+            if string != "":
+                text_wordlist.append(string)
+
+        #print("DEBUG 3B",text_wordlist)
+        
+        matchIndex = 0
+        compareString = ""
+
+        for i in range(len(text_wordlist)):
+            if text_wordlist[i] == phrase_word_list[0]:
+                matchIndex = i
+                for i in range(len(phrase_word_list)):
+                    try:
+                        compareString+=text_wordlist[matchIndex]
+                        matchIndex+=1
+                    except:
+                        return False
+
+        #print("COMP 1", phraseJoin)
+        #print("COMP 2",compareString)
+
+        if phraseJoin == compareString:
+            return True
+        else:
+            return False
+
+        #index = 0
+
+        #for phraseWord in phrase_word_list:
+        #    for wordIndex in range(index,len(text_wordlist),1):
+        #        if text_wordlist[wordIndex] == phraseWord:
+        #            index = wordIndex+1
+        #            break
+        #        elif index != 0:
+        #            return False
+        #return True
 
 
 # Problem 3
@@ -120,21 +164,20 @@ class PhraseTrigger(Trigger):
 
 class TitleTrigger(PhraseTrigger):
     def __init__(self,phrase):
-        self.phrase = phrase
-    def is_phrase_in(self,text):
-        # Return True if self.phrase is in text, else false. Not case sensitive
-        phrase_word_list = self.phrase.split()
-
-        lower_Text = text.lower()
-
-        for word in phrase_word_list:
-            if word not in lower_Text:
-                return False
-
-        return True
+        PhraseTrigger.__init__(self,phrase)
+    def evaluate(self, story):
+        self.title = story.get_title()
+        return PhraseTrigger.is_phrase_in(self,self.title)
 
 # Problem 4
 # TODO: DescriptionTrigger
+
+class DescriptionTrigger(PhraseTrigger):
+    def __init__(self,phrase):
+        PhraseTrigger.__init__(self,phrase)
+    def evaluate(self, story):
+        self.description = story.get_description()
+        return PhraseTrigger.is_phrase_in(self,self.description)
 
 # TIME TRIGGERS
 
@@ -144,9 +187,25 @@ class TitleTrigger(PhraseTrigger):
 #        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
 #        Convert time from string to a datetime before saving it as an attribute.
 
+class TimeTrigger(Trigger):
+    def __init__(self,time):
+        format = '%d %b %Y %H:%M:%S'
+        self.time = datetime.strptime(time,format)
+
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
 
+class BeforeTrigger(TimeTrigger):
+    def __init__(self, time):
+        TimeTrigger.__init__(self,time)
+    def evaluate(self, story):
+        return story.get_pubdate() < self.time
+
+class AfterTrigger(TimeTrigger):
+    def __init__(self, time):
+        TimeTrigger.__init__(self,time)
+    def evaluate(self, story):
+        return story.get_pubdate() > self.time
 
 # COMPOSITE TRIGGERS
 
