@@ -136,6 +136,8 @@ class PhraseTrigger(Trigger):
                 return True
         
         return False 
+    def getPhrase(self):
+        return self.phrase
 
 # Problem 3
 # TODO: TitleTrigger
@@ -146,7 +148,7 @@ class TitleTrigger(PhraseTrigger):
     def evaluate(self, story):
         self.title = story.get_title()
         return PhraseTrigger.is_phrase_in(self,self.title)
-
+    
 # Problem 4
 # TODO: DescriptionTrigger
 
@@ -191,12 +193,31 @@ class AfterTrigger(TimeTrigger):
 # Problem 7
 # TODO: NotTrigger
 
+class NotTrigger(Trigger):
+    def __init__(self,t):
+        self.trigger = t
+    def evaluate(self, story):
+        return not self.trigger.evaluate(story)
+
 # Problem 8
 # TODO: AndTrigger
+
+class AndTrigger(Trigger):
+    def __init__(self,t1,t2):
+        self.trigger1 = t1
+        self.trigger2 = t2
+    def evaluate(self, story):
+        return self.trigger1.evaluate(story) and self.trigger2.evaluate(story)
 
 # Problem 9
 # TODO: OrTrigger
 
+class OrTrigger(Trigger):
+    def __init__(self,t1,t2):
+        self.trigger1 = t1
+        self.trigger2 = t2
+    def evaluate(self, story):
+        return self.trigger1.evaluate(story) or self.trigger2.evaluate(story)
 
 #======================
 # Filtering
@@ -212,7 +233,17 @@ def filter_stories(stories, triggerlist):
     # TODO: Problem 10
     # This is a placeholder
     # (we're just returning all the stories, with no filtering)
-    return stories
+
+    validStories = list()
+    
+    for a in range(len(stories)):
+        for b in range(len(triggerlist)):
+            if triggerlist[b].evaluate(stories[a]):
+                validStories.append(stories[a])
+                break
+    print("TEST",len(validStories))
+
+    return validStories
 
 
 
@@ -220,6 +251,7 @@ def filter_stories(stories, triggerlist):
 # User-Specified Triggers
 #======================
 # Problem 11
+
 def read_trigger_config(filename):
     """
     filename: the name of a trigger configuration file
@@ -234,13 +266,61 @@ def read_trigger_config(filename):
     for line in trigger_file:
         line = line.rstrip()
         if not (len(line) == 0 or line.startswith('//')):
-            lines.append(line)
+            lines.append(line.split(','))
 
     # TODO: Problem 11
     # line is the list of lines that you need to parse and for which you need
     # to build triggers
 
-    print(lines) # for now, print it so you see what it contains!
+    triggerDict = dict()
+    triggerList = list()
+
+    for line in lines:
+        if line[0] != "ADD":
+            name = line[0]
+            if line[1] == "TITLE":
+                #print("YES,TITLE")
+                triggerDict[name] = TitleTrigger(line[2])
+                
+            elif line[1] == "DESCRIPTION":
+                triggerDict[name] = DescriptionTrigger(line[2])
+            elif line[1] == "AFTER":
+                triggerDict[name] = AfterTrigger(line[2])
+            elif line[1] == "BEFORE":
+                triggerDict[name] = BeforeTrigger(line[2])
+            elif line[1] == "NOT":
+                try:
+                    triggerDict[name] = NotTrigger(triggerDict[line[2]])
+                except:
+                    continue
+            elif line[1] == "AND":
+                try:
+                    triggerDict[name] = AndTrigger(triggerDict[line[2]],triggerDict[line[3]])
+                except:
+                    continue
+            elif line[1] == "OR":
+                try:
+                    triggerDict[name] = OrTrigger(triggerDict[line[2]],triggerDict[line[3]])
+                except:
+                    continue
+            else:
+                continue
+
+    #for i in range(len(lines)):
+    #    print(lines[i])
+
+    for i in triggerDict:
+        x = triggerDict[i]
+        triggerList.append(x)
+    
+    #print("TEST",triggerList[0].getPhrase())
+
+    return triggerList
+
+    # return triggerList
+
+    #print(lines) # for now, print it so you see what it contains!
+    #print(triggerDict)
 
 
 
@@ -250,15 +330,16 @@ def main_thread(master):
     # A sample trigger list - you might need to change the phrases to correspond
     # to what is currently in the news
     try:
-        t1 = TitleTrigger("election")
-        t2 = DescriptionTrigger("Trump")
-        t3 = DescriptionTrigger("Clinton")
-        t4 = AndTrigger(t2, t3)
-        triggerlist = [t1, t4]
+        #t1 = TitleTrigger("election")
+        #t1 = TitleTrigger("and")
+        #t2 = DescriptionTrigger("Trump")
+        #t3 = DescriptionTrigger("Clinton")
+        #t4 = AndTrigger(t2, t3)
+        #triggerlist = [t1]
 
         # Problem 11
         # TODO: After implementing read_trigger_config, uncomment this line 
-        # triggerlist = read_trigger_config('triggers.txt')
+        triggerlist = read_trigger_config('problem_set_5_triggers.txt')
         
         # HELPER CODE - you don't need to understand this!
         # Draws the popup window that displays the filtered stories
@@ -268,7 +349,7 @@ def main_thread(master):
         scrollbar = Scrollbar(master)
         scrollbar.pack(side=RIGHT,fill=Y)
 
-        t = "Google & Yahoo Top News"
+        t = "Google Top News"
         title = StringVar()
         title.set(t)
         ttl = Label(master, textvariable=title, font=("Helvetica", 18))
@@ -279,6 +360,7 @@ def main_thread(master):
         button = Button(frame, text="Exit", command=root.destroy)
         button.pack(side=BOTTOM)
         guidShown = []
+
         def get_cont(newstory):
             if newstory.get_guid() not in guidShown:
                 cont.insert(END, newstory.get_title()+"\n", "title")
@@ -291,12 +373,18 @@ def main_thread(master):
 
             print("Polling . . .", end=' ')
             # Get stories from Google's Top Stories RSS news feed
-            stories = process("http://news.google.com/news?output=rss")
+            #stories = process("https://news.yahoo.com/rss/topstories")
+            stories = process("https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en")
+
+            #print("DEBUG TEST:",len(stories))
+            #for i in range(len(stories)):
+            #    print(stories[i].get_title())
 
             # Get stories from Yahoo's Top Stories RSS news feed
-            stories.extend(process("http://news.yahoo.com/rss/topstories"))
+            #stories.extend(process("https://news.yahoo.com/rss/topstories"))
 
             stories = filter_stories(stories, triggerlist)
+            print("TEST",len(stories))
 
             list(map(get_cont, stories))
             scrollbar.config(command=cont.yview)
