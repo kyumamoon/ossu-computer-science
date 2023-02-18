@@ -99,65 +99,43 @@ class Trigger(object):
 # Problem 2
 # TODO: PhraseTrigger
 
+def clean_Text(text):
+    symbols = "!@#$%^&*()-_+={}[]|\:;'<>?,./\""
+    cleaned_text_wordList = list()
+    cleaned_text = text.lower()
+    for symbol in symbols:
+            cleaned_text = cleaned_text.replace(symbol," ")
+    cleanedText_wordlist = cleaned_text.split(" ")
+    for string in cleanedText_wordlist:
+        if string != "":
+            cleaned_text_wordList.append(string)    
+
+    return cleaned_text_wordList
+
 class PhraseTrigger(Trigger):
     def __init__(self,phrase):
         self.phrase = phrase.lower()
+        self.phrase_list = self.phrase.split()
     def is_phrase_in(self,text):
         # Return True if self.phrase is in text, else false. Not case sensitive
 
-        phrase_word_list = self.phrase.split(" ")
-        phraseJoin = "".join(phrase_word_list)
+
+        cleanedText = clean_Text(text)
+
+        possibleMatches = list()
+
+        for i in range(len(cleanedText)):
+            if cleanedText[i] == self.phrase_list[0]:
+                try:
+                    possibleMatches.append(cleanedText[i:(i+len(self.phrase_list))])
+                except:
+                    continue
+
+        for i in range(len(possibleMatches)):
+            if possibleMatches[i] == self.phrase_list:
+                return True
         
-        #print("DEBUG 1",phrase_word_list)
-
-        symbols = "!@#$%^&*()-_+={}[]|\:;'<>?,./\""
-        cleaned_Text = text.lower()
-        for symbol in symbols:
-            cleaned_Text = cleaned_Text.replace(symbol," ")
-
-        cleanedText_wordlist = cleaned_Text.split(" ")
-        #print("DEBUG 2",cleaned_Text)
-        text_wordlist = list()
-        #print("DEBUG 3A",cleanedText_wordlist)
-
-        for string in cleanedText_wordlist:
-            if string != "":
-                text_wordlist.append(string)
-
-        #print("DEBUG 3B",text_wordlist)
-        
-        matchIndex = 0
-        compareString = ""
-
-        for i in range(len(text_wordlist)):
-            if text_wordlist[i] == phrase_word_list[0]:
-                matchIndex = i
-                for i in range(len(phrase_word_list)):
-                    try:
-                        compareString+=text_wordlist[matchIndex]
-                        matchIndex+=1
-                    except:
-                        return False
-
-        #print("COMP 1", phraseJoin)
-        #print("COMP 2",compareString)
-
-        if phraseJoin == compareString:
-            return True
-        else:
-            return False
-
-        #index = 0
-
-        #for phraseWord in phrase_word_list:
-        #    for wordIndex in range(index,len(text_wordlist),1):
-        #        if text_wordlist[wordIndex] == phraseWord:
-        #            index = wordIndex+1
-        #            break
-        #        elif index != 0:
-        #            return False
-        #return True
-
+        return False 
 
 # Problem 3
 # TODO: TitleTrigger
@@ -191,7 +169,7 @@ class TimeTrigger(Trigger):
     def __init__(self,time):
         format = '%d %b %Y %H:%M:%S'
         self.time = datetime.strptime(time,format)
-
+        self.time = self.time.replace(tzinfo=pytz.timezone("EST"))
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
 
@@ -199,13 +177,14 @@ class BeforeTrigger(TimeTrigger):
     def __init__(self, time):
         TimeTrigger.__init__(self,time)
     def evaluate(self, story):
-        return story.get_pubdate() < self.time
-
+        self.story_time = story.get_pubdate().replace(tzinfo=pytz.timezone("EST"))
+        return self.story_time < self.time
 class AfterTrigger(TimeTrigger):
     def __init__(self, time):
         TimeTrigger.__init__(self,time)
     def evaluate(self, story):
-        return story.get_pubdate() > self.time
+        self.story_time = story.get_pubdate().replace(tzinfo=pytz.timezone("EST"))
+        return self.story_time > self.time
 
 # COMPOSITE TRIGGERS
 
