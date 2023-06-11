@@ -218,7 +218,7 @@
 #;(define (schedule-tas talist slotlist) (
                                           local
                                            [
-                                            (define (removeElement list element) (
+                                            #;(define (removeElement list element) (
                                                                                   local
                                                                                    [
                                                                                     (define (removeElement element previousIndex list) (
@@ -230,8 +230,20 @@
                                                                                     ]
                                                                                    (removeElement element empty list)
                                                                                    ))
+                                            (define (removeElement list element func func2) (
+                                                                                  local
+                                                                                   [
+                                                                                    (define (removeElement element previousIndex list func func2) (
+                                                                                                                                        cond
+                                                                                                                                         [(empty? list) (append previousIndex list)]
+                                                                                                                                         [(equal? (func element) (func2 (first list))) (append previousIndex (rest list))]
+                                                                                                                                         [else (removeElement element (append previousIndex (cons (first list) empty)) (rest list) func func2)]  
+                                                                                                                                         ))
+                                                                                    ]
+                                                                                   (removeElement element empty list func func2)
+                                                                                   ))
                                          
-                                            (define (removeTa list ta) (
+                                            #;(define (removeTa list ta) (
                                                                         local
                                                                          [
                                                                           (define (removeTa ta previousIndex list) (
@@ -243,16 +255,28 @@
                                                                           ]
                                                                          (removeTa ta empty list)
                                                                          ))
+                                            (define (removeTa list ta func func2) (
+                                                                        local
+                                                                         [
+                                                                          (define (removeTa ta previousIndex list func func2) (
+                                                                                                                    cond
+                                                                                                                     [(empty? list) (append previousIndex list)]
+                                                                                                                     [(equal? (func ta) (func2 (first list))) (append previousIndex (rest list))]
+                                                                                                                     [else (removeTa ta (append previousIndex (list (first list))) (rest list) func func2)]  
+                                                                                                                     ))
+                                                                          ]
+                                                                         (removeTa ta empty list func func2)
+                                                                         ))
                                           
                                             (define (scheduleTA ta talist slotlist schedule og) (
                                                                                                  cond
-                                                                                                  [(equal? 0 (ta-max ta)) (scheduleTAList (removeTa talist ta) slotlist schedule)] ;; when TA is done scheduling.
-                                                                                                  [(empty? (ta-avail ta)) (scheduleTAList (removeTa talist ta) slotlist schedule)] ;; when TA avail is filled
+                                                                                                  [(equal? 0 (ta-max ta)) (scheduleTAList (removeElement talist ta ta-name ta-name) slotlist schedule)] ;; when TA is done scheduling.
+                                                                                                  [(empty? (ta-avail ta)) (scheduleTAList (removeElement talist ta ta-name ta-name) slotlist schedule)] ;; when TA avail is filled
                                                                                                   [else (
                                                                                                          if
                                                                                                          (member (first (ta-avail ta)) slotlist) ;; if TA has slot matching slotlist
-                                                                                                         (scheduleTA (make-ta (ta-name ta) (sub1 (ta-max ta)) (removeElement (ta-avail ta) (first (ta-avail ta)))) talist (removeElement slotlist (first (ta-avail ta))) (cons (make-assignment og (first (ta-avail ta))) schedule) ta)
-                                                                                                         (scheduleTA (make-ta (ta-name ta) (ta-max ta) (removeElement (ta-avail ta) (first (ta-avail ta)))) talist slotlist schedule ta) ;; check next avail
+                                                                                                         (scheduleTA (make-ta (ta-name ta) (sub1 (ta-max ta)) (removeElement (ta-avail ta) (first (ta-avail ta)) identity identity)) talist (removeElement slotlist (first (ta-avail ta)) identity identity) (cons (make-assignment og (first (ta-avail ta))) schedule) ta)
+                                                                                                         (scheduleTA (make-ta (ta-name ta) (ta-max ta) (removeElement (ta-avail ta) (first (ta-avail ta)) identity identity)) talist slotlist schedule ta) ;; check next avail
                                                                                                          )]
                                                                                                   ))
                                           
@@ -283,38 +307,24 @@
 (define (schedule-tas talist slotlist) (
                                         local
                                          [
-                                          (define (removeElement list element) (
-                                                                                local
-                                                                                 [
-                                                                                  (define (removeElement element previousIndex list) (
-                                                                                                                                      cond
-                                                                                                                                       [(empty? list) (append previousIndex list)]
-                                                                                                                                       [(equal? element (first list)) (append previousIndex (rest list))]
-                                                                                                                                       [else (removeElement element (append previousIndex (cons (first list) empty)) (rest list))]  
-                                                                                                                                       ))
-                                                                                  ]
-                                                                                 (removeElement element empty list)
-                                                                                 ))
-                                         
-                                          (define (removeTa list ta) (
-                                                                      local
-                                                                       [
-                                                                        (define (removeTa ta previousIndex list) (
-                                                                                                                  cond
-                                                                                                                   [(empty? list) (append previousIndex list)]
-                                                                                                                   [(equal? (ta-name ta) (ta-name (first list))) (append previousIndex (rest list))]
-                                                                                                                   [else (removeTa ta (append previousIndex (list (first list))) (rest list))]  
-                                                                                                                   ))
-                                                                        ]
-                                                                       (removeTa ta empty list)
-                                                                       ))
-                                          
+                                          (define (removeElement list element func func2) (
+                                                                                  local
+                                                                                   [
+                                                                                    (define (removeElement element previousIndex list func func2) (
+                                                                                                                                        cond
+                                                                                                                                         [(empty? list) (append previousIndex list)]
+                                                                                                                                         [(equal? (func element) (func2 (first list))) (append previousIndex (rest list))]
+                                                                                                                                         [else (removeElement element (append previousIndex (cons (first list) empty)) (rest list) func func2)]  
+                                                                                                                                         ))
+                                                                                    ]
+                                                                                   (removeElement element empty list func func2)
+                                                                                   ))
                                           (define (scheduleTA ta talist slotlist schedule og) (
                                                                                                cond
-                                                                                                [(equal? 0 (ta-max ta)) (scheduleTAList (removeTa talist ta) slotlist schedule)] ;; when TA is done scheduling.
-                                                                                                [(empty? (ta-avail ta)) (scheduleTAList (removeTa talist ta) slotlist schedule)] ;; when TA avail is filled
-                                                                                                [(member (first (ta-avail ta)) slotlist) (scheduleTA (make-ta (ta-name ta) (sub1 (ta-max ta)) (removeElement (ta-avail ta) (first (ta-avail ta)))) talist (removeElement slotlist (first (ta-avail ta))) (cons (make-assignment og (first (ta-avail ta))) schedule) ta)]  ;; if TA has slot matching slotlist
-                                                                                                [else (scheduleTA (make-ta (ta-name ta) (ta-max ta) (removeElement (ta-avail ta) (first (ta-avail ta)))) talist slotlist schedule ta)] ;; check next avail
+                                                                                                [(equal? 0 (ta-max ta)) (scheduleTAList (removeElement talist ta ta-name ta-name) slotlist schedule)] ;; when TA is done scheduling.
+                                                                                                [(empty? (ta-avail ta)) (scheduleTAList (removeElement talist ta ta-name ta-name) slotlist schedule)] ;; when TA avail is filled
+                                                                                                [(member (first (ta-avail ta)) slotlist) (scheduleTA (make-ta (ta-name ta) (sub1 (ta-max ta)) (removeElement (ta-avail ta) (first (ta-avail ta)) identity identity)) talist (removeElement slotlist (first (ta-avail ta)) identity identity) (cons (make-assignment og (first (ta-avail ta))) schedule) ta)]  ;; if TA has slot matching slotlist
+                                                                                                [else (scheduleTA (make-ta (ta-name ta) (ta-max ta) (removeElement (ta-avail ta) (first (ta-avail ta)) identity identity)) talist slotlist schedule ta)] ;; check next avail
                                                                                                 ))
                                           
                                           (define (scheduleTAList talist slotlist schedule) (
