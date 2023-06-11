@@ -1,0 +1,17 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname mergedsort) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+
+
+;; Signature
+;; (listof Number) -> (listofNumber)
+
+;; Purpose
+;; consume a list of number and produce a sorted list of number using mergesort algorithm.
+
+;; Example
+
+;; Stub
+
+;; Template
+
