@@ -1,14 +1,14 @@
 # ossu-computer-science
 repository to hold projects/work related to ossu curriculum
 
-Progress:
+**Progress:**
 - ✅ = Completed , NS = Not Stared , IP = In Progress
 
-Intro to CS:
+**Intro to CS:**
 - ✅ - Python For Everybody
 - ✅ - Introduction to Computer Science
 
-Core Programming:
+**Core Programming:**
 - ✅ - How to Code Simple Data
 - ✅ - How to Code Complex Data
 - IP  - Programming Languages Part A
