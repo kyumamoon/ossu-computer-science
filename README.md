@@ -18,36 +18,36 @@ repository to hold projects/work related to ossu curriculum
 - NS  - Design Patterns
 - NS  - Software Architecture
 
-Core Math: NS
+**Core Math: NS**
 - NS  - Prerequisite Math
 - NS  - Calculus 1A Differentiation
 - NS  - Calculus 1B Integration
 - NS  - Math for CS
 - NS  - Physics
 
-CS Tools: NS
+**CS Tools: NS**
 - NS  - Missing Semester
 
-Core Systems: NS
+Core Systems: NS**
 - NS  - Nand2tetris 1
 - NS  - Nand2tetris 2
 - NS  - Operating Systems 3 Easy Pieces
 - NS  - Computer Networking
 
-Core Theory: NS
+**Core Theory: NS**
 - NS  - Divide Conquer Algorithm
 - NS  - Graph Search Algorithm
 - NS  - Greedy Dynamic Algorithm
 - NS  - NP Complete Algorithm
 
-Core Security: NS
+**Core Security: NS**
 - NS  - CyberSec Fundamentals
 - NS  - Principles of Secure Coding
 - NS  - Identifying Security Vulnberabilities
 - NS  - Identifying Security Vulnerabilities in C/C++ Programming
 - NS  - Exploiting and Securing Vulnerabilities in Java APPS
 
-Core Applications: NS
+**Core Applications: NS**
 - NS  - Relational Databases and SQL
 - NS  - Database: Modeling and Theory
 - NS  - Database: Semistructured Data
@@ -56,17 +56,17 @@ Core Applications: NS
 - NS  - Software Engineering Introduction
 - NS  - Software Development Capstone Project
 
-Core Ethics: NS
+**Core Ethics: NS**
 - NS  - Ethics, Technology, Engineering
 - NS  - Intro to Intellectual Property
 - NS  - Data Privacy Fundamentals
 
-Advanced Math: NS
+**Advanced Math: NS**
 - NS  - Essence of Linear Algebra
 - NS  - Linear Algebra
 - NS  - Numerical Analysis
 - NS  - Intro to Logic
 - NS  - Probability
 
-Final Project: NS
+**Final Project: NS**
 - NS  - FullStack Open
