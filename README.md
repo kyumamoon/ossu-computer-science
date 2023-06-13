@@ -11,19 +11,19 @@ Intro to CS:
 Core Programming:
 - ✅ - How to Code Simple Data
 - ✅ - How to Code Complex Data
-IP  - Programming Languages Part A
-NS  - Programming Languages Part B
-NS  - Programming Languages Part C
-NS  - Object Oriented Design
-NS  - Design Patterns
-NS  - Software Architecture
+- IP  - Programming Languages Part A
+- NS  - Programming Languages Part B
+- NS  - Programming Languages Part C
+- NS  - Object Oriented Design
+- NS  - Design Patterns
+- NS  - Software Architecture
 
 Core Math: NS
-NS  - Prerequisite Math
-NS  - Calculus 1A Differentiation
-NS  - Calculus 1B Integration
-NS  - Math for CS
-NS  - Physics
+- NS  - Prerequisite Math
+- NS  - Calculus 1A Differentiation
+- NS  - Calculus 1B Integration
+- NS  - Math for CS
+- NS  - Physics
 
 CS Tools: NS
 NS  - Missing Semester
