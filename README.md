@@ -2,7 +2,7 @@
 repository to hold projects/work related to ossu curriculum
 
 Progress:
-- NS = Not Stared , IP = In Progress
+- ✅ = Completed , NS = Not Stared , IP = In Progress
 
 Intro to CS:
 - ✅ - Python For Everybody
