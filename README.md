@@ -5,15 +5,15 @@ repository to hold projects/work related to ossu curriculum
 - ✅ = Completed , NS = Not Stared , IP = In Progress
 
 **Intro to CS:**
-- ✅ - Python For Everybody
-- ✅ - Introduction to Computer Science
+- ✅ - Python For Everybody - https://www.py4e.com/lessons
+- ✅ - Introduction to Computer Science - https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/
 
 **Core Programming:**
-- ✅ - How to Code Simple Data
-- ✅ - How to Code Complex Data
-- IP  - Programming Languages Part A
-- NS  - Programming Languages Part B
-- NS  - Programming Languages Part C
+- ✅ - How to Code Simple Data - https://www.edx.org/course/how-to-code-simple-data
+- ✅ - How to Code Complex Data - https://www.edx.org/course/how-to-code-complex-data
+- IP  - Programming Languages Part A - https://www.coursera.org/learn/programming-languages
+- NS  - Programming Languages Part B - https://www.coursera.org/learn/programming-languages-part-b
+- NS  - Programming Languages Part C - https://www.coursera.org/learn/programming-languages-part-c
 - NS  - Object Oriented Design
 - NS  - Design Patterns
 - NS  - Software Architecture
