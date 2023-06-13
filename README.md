@@ -9,8 +9,8 @@ Intro to CS:
 ✅ - Introduction to Computer Science
 
 Core Programming:
-✅ - How to Code Simple Data
-✅ - How to Code Complex Data
+- ✅ - How to Code Simple Data
+- ✅ - How to Code Complex Data
 IP  - Programming Languages Part A
 NS  - Programming Languages Part B
 NS  - Programming Languages Part C
