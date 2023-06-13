@@ -14,25 +14,26 @@ repository to hold projects/work related to ossu curriculum
 - IP  - Programming Languages Part A - https://www.coursera.org/learn/programming-languages
 - NS  - Programming Languages Part B - https://www.coursera.org/learn/programming-languages-part-b
 - NS  - Programming Languages Part C - https://www.coursera.org/learn/programming-languages-part-c
-- NS  - Object Oriented Design
-- NS  - Design Patterns
-- NS  - Software Architecture
+- NS  - Object Oriented Design - https://www.coursera.org/learn/object-oriented-design
+- NS  - Design Patterns - https://www.coursera.org/learn/design-patterns
+- NS  - Software Architecture - https://www.coursera.org/learn/software-architecture
 
 **Core Math: NS**
-- NS  - Prerequisite Math
-- NS  - Calculus 1A Differentiation
-- NS  - Calculus 1B Integration
-- NS  - Math for CS
+- ✅  - Prerequisite Math
+- NS  - Calculus 1A Differentiation - https://openlearninglibrary.mit.edu/courses/course-v1:MITx+18.01.1x+2T2019/about
+- NS  - Calculus 1B Integration - https://openlearninglibrary.mit.edu/courses/course-v1:MITx+18.01.2x+3T2019/about
+- NS  - Calculus 1C - https://openlearninglibrary.mit.edu/courses/course-v1:MITx+18.01.3x+1T2020/about
+- NS  - Math for CS - https://openlearninglibrary.mit.edu/courses/course-v1:OCW+6.042J+2T2019/about
 - NS  - Physics
 
 **CS Tools: NS**
-- NS  - Missing Semester
+- NS  - Missing Semester - https://missing.csail.mit.edu/
 
 **Core Systems: NS**
-- NS  - Nand2tetris 1
-- NS  - Nand2tetris 2
+- NS  - Nand2tetris 1 - https://www.coursera.org/learn/build-a-computer
+- NS  - Nand2tetris 2 - https://www.coursera.org/learn/nand2tetris2
 - NS  - Operating Systems 3 Easy Pieces
-- NS  - Computer Networking
+- NS  - Computer Networking - http://gaia.cs.umass.edu/kurose_ross/online_lectures.htm
 
 **Core Theory: NS**
 - NS  - Divide Conquer Algorithm
