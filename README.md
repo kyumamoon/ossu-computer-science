@@ -28,7 +28,7 @@ repository to hold projects/work related to ossu curriculum
 **CS Tools: NS**
 - NS  - Missing Semester
 
-Core Systems: NS**
+**Core Systems: NS**
 - NS  - Nand2tetris 1
 - NS  - Nand2tetris 2
 - NS  - Operating Systems 3 Easy Pieces
